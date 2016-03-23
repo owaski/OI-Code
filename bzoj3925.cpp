@@ -59,11 +59,11 @@ struct poly {
 }f[S+9], p[M+9], mult;
 
 inline bool in(int S, int x) {
-    return S & (1<<(x-1));
+    	return S & (1<<(x-1));
 }
 
 inline bool between(int S, int T, int u, int v) {
-    return (in(S, u) && in(T, v)) || (in(S, v) && in(T, u));
+    	return (in(S, u) && in(T, v)) || (in(S, v) && in(T, u));
 }
 
 int main() {
@@ -93,7 +93,7 @@ int main() {
 				f[i] += (p[0]-f[j])*p[cnt];
 			}
 	}
-    printf("%.6lf\n", (double)f[(1<<n)-1].integration());
+    	printf("%.6lf\n", (double)f[(1<<n)-1].integration());
 
 	fclose(stdin);fclose(stdout);
 	return 0;
