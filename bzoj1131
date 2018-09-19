@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+
+#define ll long long
+
+#define pii std::pair<int,int>
+#define mp std::make_pair
+#define fi first
+#define se second
+
+#define SZ(x) (int)(x).size()
+#define pb push_back
+
+template<class T>inline void chkmax(T &x, const T &y) {if(x < y) x = y;}
+template<class T>inline void chkmin(T &x, const T &y) {if(x > y) x = y;}
+
+template<class T>
+inline void read(T &x) {
+  char c;int f = 1;x = 0;
+  while(((c=getchar()) < '0' || c > '9') && c != '-');
+  if(c == '-') f = -1;else x = c-'0';
+  while((c=getchar()) >= '0' && c <= '9') x = x*10+c-'0';
+  x *= f;
+}
+static int outn;
+static char out[(int)2e7];
+template<class T>
+inline void write(T x) {
+  if(x < 0) out[outn++] = '-', x = -x;
+  if(x) {
+    static int tmpn;
+    static char tmp[20];
+    tmpn = 0;
+    while(x) tmp[tmpn++] = x%10+'0', x /= 10;
+    while(tmpn) out[outn++] = tmp[--tmpn];
+  }
+  else out[outn++] = '0';
+}
+
+const int N = 1e6;
+
+int n;
+struct tree {
+	int sz, head[N + 9], to[N * 2 + 9], ne[N * 2 + 9];
+	void add(int u, int v) {
+		to[++sz] = v, ne[sz] = head[u], head[u] = sz;
+		to[++sz] = u, ne[sz] = head[v], head[v] = sz;
+	}
+}T;
+
+int size[N + 9];
+ll sum[N + 9];
+ll f[N + 9];
+
+void dfs(int x, int fa) {
+	size[x] = 1, sum[x] = 0;
+	for(int i = T.head[x], y; i; i = T.ne[i]) {
+		if((y = T.to[i]) != fa) {
+			dfs(y, x);
+			size[x] += size[y];
+			sum[x] += sum[y] + size[y];
+		}
+	}
+}
+
+void dp(int x, int fa) {
+	for(int i = T.head[x], y; i; i = T.ne[i]) {
+		if((y = T.to[i]) != fa) {
+			f[y] = f[x] + (n - size[y]) - size[y];
+			dp(y, x);
+		}
+	}
+}
+
+int main() {
+	read(n);
+	for(int i = 1; i < n; ++i) {
+		int u, v;
+		read(u), read(v);
+		T.add(u, v);
+	}
+	dfs(1, 0);
+	f[1] = sum[1];
+	dp(1, 0);
+	int maxid = 0;
+	for(int i = 1; i <= n; ++i) {
+		if(f[i] > f[maxid]) {
+			maxid = i;
+		}
+	}
+	std::cout << maxid << std::endl;
+}
